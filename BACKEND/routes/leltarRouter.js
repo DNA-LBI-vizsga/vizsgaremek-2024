@@ -3,6 +3,7 @@ const router = express.Router()
 const storage = require("../services/leltarStorage")
 const value = require("../services/leltarValue")
 const name = require("../services/leltarName")
+const user = require("../services/leltarFunctions")
 
 //GET endpoints
 //storage_place
@@ -103,5 +104,17 @@ router.delete("/deleteItem/:id",
             next(err)
         }
 })
+
+
+//functions 
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await checkPassword(username, password);
+    if (user) {
+        res.status(200).json({ message: "Login successful", user });
+    } else {
+        res.status(401).json({ message: "Invalid username or password" });
+    }
+});
 
 module.exports = router
